@@ -16,7 +16,7 @@ function MessageBox(props) {
         <>
         {console.log(props.data)}
         {props.data.name == 'Admin' ? 
-        <Paper elevation={2} style={{maxWidth:'25%',borderRadius:'10px',padding:'5px 5px',minWidth:'7%',backgroundColor:'azure'}}>
+        <Paper elevation={2} style={{maxWidth:'75%',borderRadius:'10px',padding:'5px 5px',minWidth:'7%',backgroundColor:'azure'}}>
         <div style={{wordBreak:'break-word',fontSize:'1em',padding:'0px 5px'}}>{props.data.message}</div>
         {/* <div className={classes.smallText} style={{display:'flex',justifyContent:'flex-end'}}>{new Date().getHours()%12}:{new Date().getMinutes()} {new Date().getHours() >= 12 ? 'PM' : 'AM'}</div> */}
         </Paper>

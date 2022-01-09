@@ -12,6 +12,7 @@ function Chat() {
     const [room,setRoom] = useState('dum1');
     const [name,setName] = useState('');
     const [receivedData,setReceivedData] = useState([]);
+    const [wHeight,setWHeight] = useState(null);
 
     useEffect(()=>{ 
         console.log(socket);
@@ -49,19 +50,28 @@ function Chat() {
             handleMessage();
         }
     }
+    useEffect(()=>{
+        setWHeight(window.innerHeight);
+    },[window.innerHeight])
     return (
-        <div >
-            <div style={{position:'absolute',bottom:'0px'}}>
+        <div className='container'>
+            
+            {/* {receivedData.map((res,index)=>(<div key={index} 
+            style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px',flexWrap:'wrap',border:'1px solid black'}}>
+                {res.name}:{res.message}</div>))} */}
+                <span className='row' >
+                    <span className='col-md-10' style={{height:'400px'}}>
+            {receivedData.map((res,index)=>(<span key={index}  style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px'}} ><MessageBox  data={{...res,index}}/>  </span>))}
+            </span>
+            <div className='col-md-2' style={{display:'flex',height:{wHeight},alignItems:'flex-end',justifyContent:'space-evenly'}}>
+                
                 {/* <TextField id="outlined-basic" color="primary" onKeyDown={handleSendOnEnter} onChange={handleText} label="enter your message" variant="outlined" /> */}
-                <input id="outlined-basic"  onKeyDown={handleSendOnEnter} onChange={handleText} placeholder="enter your message" style={{width:'500px',padding:'3% 3%'}} />
+                <input id="outlined-basic"  onKeyDown={handleSendOnEnter} onChange={handleText} placeholder="enter your message" style={{width:'70%',padding:'2% 2%',borderRadius:'20px'}} />
                 <button onClick={
                     handleMessage
                 }>send</button>
             </div>
-            {/* {receivedData.map((res,index)=>(<div key={index} 
-            style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px',flexWrap:'wrap',border:'1px solid black'}}>
-                {res.name}:{res.message}</div>))} */}
-            {receivedData.map((res,index)=>(<span key={index} style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px'}} ><MessageBox  data={{...res,index}}/>  </span>))}
+            </span>
         </div>
     )
 }
