@@ -2,7 +2,11 @@ import React,{useState,useEffect} from 'react'
 import io from 'socket.io-client';
 import TextField from '@material-ui/core/TextField';
 import MessageBox from './MessageBox';
+import SendIcon from '@material-ui/icons/Send';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import './Chat.css';
+import { IconButton } from '@material-ui/core';
 
 const ENDPOINT = 'http://localhost:5000';
 const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
@@ -63,13 +67,14 @@ function Chat() {
                     <div className='' style={{maxHeight:'80%',overflowY:'scroll'}}>
             {receivedData.map((res,index)=>(<span key={index}  style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px'}} ><MessageBox  data={{...res,index}}/>  </span>))}
             </div>
-            <div className='' style={{display:'flex',maxHeight:'14%',alignItems:'flex-end',justifyContent:'space-evenly'}}>
+            <div className='' style={{display:'flex',maxHeight:'14%',alignItems:'center',justifyContent:'center',margin:'20px 0px'}}>
                 
                 {/* <TextField id="outlined-basic" color="primary" onKeyDown={handleSendOnEnter} onChange={handleText} label="enter your message" variant="outlined" /> */}
-                <input id="outlined-basic"  onKeyDown={handleSendOnEnter} onChange={handleText} placeholder="enter your message" style={{width:'70%',padding:'2% 2%',borderRadius:'20px'}} />
-                <button onClick={
-                    handleMessage
-                }>send</button>
+                <IconButton><InsertEmoticonIcon fontSize='large' style={{color:'black'}} /></IconButton>
+                <input id="outlined-basic" autocomplete="off" onKeyDown={handleSendOnEnter} onChange={handleText} placeholder="Enter your message" style={{width:'70%',wordWrap:'break-word',padding:'1% 2%',borderRadius:'20px',margin:"0px 10px"}} />
+                <IconButton onClick={handleMessage} ><SendIcon fontSize="large" style={{margin:'0px 5px',color:'black'}}/></IconButton>
+                <IconButton><AttachFileIcon fontSize="large" style={{color:'black'}} /></IconButton>
+                
             </div>
             
         </div>
