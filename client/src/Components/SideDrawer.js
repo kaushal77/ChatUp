@@ -11,17 +11,13 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Chat from './Chat';
-import io from 'socket.io-client';
-
-const ENDPOINT = 'http://localhost:5000';
-const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
 
 const drawerWidth = 240;
 
@@ -71,12 +67,7 @@ function ResponsiveDrawer(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [activeUser, setActiveUser] = React.useState([]);
 
-  useEffect(()=>{
-    socket.on('activeUserData',(data)=>{
-      console.log(data,'userrrrrr');
-      setActiveUser((prev)=>[...prev,data]);
-    })
-  },[])
+  
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -89,20 +80,12 @@ function ResponsiveDrawer(props) {
         ChatUp</div>
       <Divider />
       <List>
+        {console.log(activeUser,'helllllllllloo')}
         {activeUser.map((res, index) => (
-          // <ListItem button key={index}>
-          //   <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-          //   <ListItemText primary={res.Name} />
-          // </ListItem>
-          <p>{res.Name}</p>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+          // console.log(res,'all user')
+          <ListItem button key={index}>
+            <ListItemIcon><FiberManualRecordIcon style={{color:'limegreen',fontSize:'1em'}} /></ListItemIcon>
+            <ListItemText primary={res} style={{marginLeft:'-30px'}} />
           </ListItem>
         ))}
       </List>
@@ -166,7 +149,7 @@ function ResponsiveDrawer(props) {
       </nav>
       <main className={classes.content} style={{backgroundImage:"url(/bg_chatup.jpg)",height:'100vh'}}  >
         <div className={classes.toolbar}  />
-        <Chat />
+        <Chat setActiveUser={setActiveUser} />
       </main>
     </div>
   );

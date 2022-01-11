@@ -59,7 +59,7 @@ export default function Home() {
     if(name !== "" && room !== "" && password !== "")
     {
       const data = {Name:name,Room:room,Password:password};
-      socket.emit('userData',data,(err)=>{console.log(err)});
+      // socket.emit('userData',data,(err)=>{console.log(err)});
       sessionStorage.setItem("name", name);
       window.location.href = "/chat";
     }
@@ -74,7 +74,7 @@ export default function Home() {
       if(name !== "" && room !== "" && password !== "")
       {
         const data = {Name:name,Room:room,Password:password};
-      socket.emit('userData',data,(err)=>{console.log(err)});
+      // socket.emit('userData',data,(err)=>{console.log(err)});
         handleLogin();
       }
       else {

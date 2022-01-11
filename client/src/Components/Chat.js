@@ -11,7 +11,7 @@ import { IconButton } from '@material-ui/core';
 const ENDPOINT = 'http://localhost:5000';
 const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
 
-function Chat() {
+function Chat({setActiveUser}) {
     const [message,setMessage] = useState('');
     const [room,setRoom] = useState('dum1');
     const [name,setName] = useState('');
@@ -27,19 +27,22 @@ function Chat() {
             setName(username);
             console.log("hiiiii",username);
         }
-        socket.emit('join',{name:username,room:room},(err)=>{
+        let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
+        socket.emit('join',{name:username,room,time},(err)=>{
             console.log(err);
         })
-        socket.on('messageToClient',({message,name})=>{
+        socket.on('messageToClient',({message,name,time})=>{
             console.log(message,name);
-            setReceivedData((prev)=>[...prev,{message,name}])
+            
+            setReceivedData((prev)=>[...prev,{message,name,time}])
         })
         
     },[])
 
     const handleMessage=()=>{
-        socket.emit('messageToServer',{data:message,room,name});
-        setReceivedData((prev)=>[...prev,{message,name}]);
+        let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`
+        socket.emit('messageToServer',{message,room,name,time});
+        setReceivedData((prev)=>[...prev,{message,name,time}]);
         document.getElementById("outlined-basic").value = '';
     }
 
@@ -57,6 +60,14 @@ function Chat() {
     useEffect(()=>{
         setWHeight(window.innerHeight);
     },[window.innerHeight])
+
+    useEffect(()=>{
+        socket.on('activeUserData',(data)=>{
+          console.log(data,'userrrrrr');
+          setActiveUser([...data]);
+        })
+      },[])
+
     return (
         <div className='' style={{height:'94%',overflowY:'hidden'}}>
             
@@ -71,7 +82,7 @@ function Chat() {
                 
                 {/* <TextField id="outlined-basic" color="primary" onKeyDown={handleSendOnEnter} onChange={handleText} label="enter your message" variant="outlined" /> */}
                 <IconButton><InsertEmoticonIcon fontSize='large' style={{color:'black'}} /></IconButton>
-                <input id="outlined-basic" autocomplete="off" onKeyDown={handleSendOnEnter} onChange={handleText} placeholder="Enter your message" style={{width:'70%',wordWrap:'break-word',padding:'1% 2%',borderRadius:'20px',margin:"0px 10px"}} />
+                <input id="outlined-basic" autoComplete="off" onKeyDown={handleSendOnEnter} onChange={handleText} placeholder="Enter your message" style={{width:'70%',wordWrap:'break-word',padding:'1% 2%',borderRadius:'20px',margin:"0px 10px"}} />
                 <IconButton onClick={handleMessage} ><SendIcon fontSize="large" style={{margin:'0px 5px',color:'black'}}/></IconButton>
                 <IconButton><AttachFileIcon fontSize="large" style={{color:'black'}} /></IconButton>
                 
