@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Chat from './Chat';
 
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   appBar: {
+    backgroundColor:'cadetblue !important',
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
@@ -51,7 +53,11 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    
   },
+  // MuiAppBarColorPrimary:{
+  //   backgroundColor:'cadetblue important'
+  // }
 }));
 
 function ResponsiveDrawer(props) {
@@ -66,7 +72,8 @@ function ResponsiveDrawer(props) {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} style={{backgroundColor: '#3f51b5',boxShadow:'0px 0px 3px 0px rgba(0, 0, 0, 0.87)',
+      {/* #3f51b5 */}
+      <div className={classes.toolbar} style={{backgroundColor: 'cadetblue',boxShadow:'0px 0px 3px 0px rgba(0, 0, 0, 0.87)',
       fontSize:'x-large',fontFamily:'cursive',textAlign:'center'}} >ChatUp</div>
       <Divider />
       <List>
@@ -141,7 +148,7 @@ function ResponsiveDrawer(props) {
           </Drawer>
         </Hidden>
       </nav>
-      <main className={classes.content}>
+      <main className={classes.content} style={{backgroundImage:"url(/bg_chatup.jpg)",height:'100vh'}}  >
         <div className={classes.toolbar}  />
         <Chat />
       </main>
