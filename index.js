@@ -15,15 +15,28 @@ io.on('connect',(socket)=>{
         console.log('join room',activeusers);
         socket.join(room);      
         socket.emit('messageToClient',{message:`welcome to the room, ${name}`,name:'Admin',time});
-        socket.broadcast.to(room).emit('messageToClient',{message:`${name} joined the room`,name:'Admin',time});
+        socket.broadcast.to(room).emit('messageToClient',{message:`${name} joined the room ${room}`,name:'Admin',time});
         activeusers = [...activeusers,name];
         console.log(activeusers,'activeusers');
-        socket.broadcast.to(room).emit('activeUserData',activeusers);
+        io.to(room).emit('activeUserData',activeusers);
         
     })
     socket.on('messageToServer',({message,room,name,time})=>{
-        console.log(message);
+        console.log(message,room);
         socket.broadcast.to(room).emit('messageToClient',{message,name,time});
+    });
+
+    socket.on('disconnected',({name,room,time})=>{
+        if(name !== undefined){
+
+            const index =  activeusers.indexOf(name);
+            console.log('before splice',index,name);
+            activeusers.splice(index,1);
+            console.log('after splice');
+            io.to(room).emit('activeUserData',activeusers);
+            socket.broadcast.to(room).emit('messageToClient',{message:`${name} left the room ${room}`,name:'Admin',time});
+        }
+       
     });
 
     // socket.on('userData',(data,callback)=>{

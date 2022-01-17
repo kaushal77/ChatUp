@@ -60,18 +60,22 @@ const useStyles = makeStyles((theme) => ({
   // }
 }));
 
-function ResponsiveDrawer(props) {
+function SideDrawer(props) {
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [activeUser, setActiveUser] = React.useState([]);
-
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [logoutUser, setLogoutUser] = useState(false);
+  const [activeUser, setActiveUser] = useState([]);
   
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleLogout =()=>{
+    setLogoutUser(true);
+  };
+  
   const drawer = (
     <div>
       {/* #3f51b5 */}
@@ -80,9 +84,11 @@ function ResponsiveDrawer(props) {
         ChatUp</div>
       <Divider />
       <List>
+        
         {console.log(activeUser,'helllllllllloo')}
         {activeUser.map((res, index) => (
           // console.log(res,'all user')
+          // res = {res.length == 0 ? sessionStorage.getItem('name') : res};
           <ListItem button key={index}>
             <ListItemIcon><FiberManualRecordIcon style={{color:'limegreen',fontSize:'1em'}} /></ListItemIcon>
             <ListItemText primary={res} style={{marginLeft:'-30px'}} />
@@ -109,9 +115,9 @@ function ResponsiveDrawer(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap style={{color:'black'}} >
-            {sessionStorage.getItem('name')}
+            {sessionStorage.getItem('room')}
           </Typography>
-          <IconButton>
+          <IconButton onClick={handleLogout}>
             <ExitToAppIcon style={{color:'black'}} />
           </IconButton>
         </Toolbar>
@@ -149,13 +155,13 @@ function ResponsiveDrawer(props) {
       </nav>
       <main className={classes.content} style={{backgroundImage:"url(/bg_chatup.jpg)",height:'100vh'}}  >
         <div className={classes.toolbar}  />
-        <Chat setActiveUser={setActiveUser} />
+        <Chat setActiveUser={setActiveUser} logoutUser={logoutUser} />
       </main>
     </div>
   );
 }
 
-ResponsiveDrawer.propTypes = {
+SideDrawer.propTypes = {
   /**
    * Injected by the documentation to work in an iframe.
    * You won't need it on your project.
@@ -163,4 +169,4 @@ ResponsiveDrawer.propTypes = {
   window: PropTypes.func,
 };
 
-export default ResponsiveDrawer;
+export default SideDrawer;

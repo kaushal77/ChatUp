@@ -58,9 +58,11 @@ export default function Home() {
   const handleLogin = () => {
     if(name !== "" && room !== "" && password !== "")
     {
-      const data = {Name:name,Room:room,Password:password};
+      // const data = {Name:name,Room:room,Password:password};
       // socket.emit('userData',data,(err)=>{console.log(err)});
       sessionStorage.setItem("name", name);
+      sessionStorage.setItem("room", room);
+      sessionStorage.setItem("password", password);
       window.location.href = "/chat";
     }
     else {
@@ -82,6 +84,10 @@ export default function Home() {
       }
     }
   };
+
+  useEffect(()=>{
+    sessionStorage.clear();
+  },[]);
 
   return (
     <div className={classes.root}>

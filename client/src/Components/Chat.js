@@ -12,7 +12,7 @@ import Picker from 'emoji-picker-react';
 const ENDPOINT = 'http://localhost:5000';
 const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
 
-function Chat({setActiveUser}) {
+function Chat({setActiveUser,logoutUser}) {
     const [message,setMessage] = useState('');
     const [room,setRoom] = useState('dum1');
     const [name,setName] = useState('');
@@ -24,12 +24,15 @@ function Chat({setActiveUser}) {
     useEffect(()=>{ 
         console.log(socket);
         const username = sessionStorage.getItem('name');
+        const userroom = sessionStorage.getItem('room');
         if(sessionStorage.getItem('name') != undefined)
         {   
-            
             setName(username);
-            console.log("hiiiii",username);
+            // setRoom(userroom);
+            setActiveUser([username]);
+            console.log("hiiiii",username,userroom);
         }
+        
         let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
         socket.emit('join',{name:username,room,time},(err)=>{
             console.log(err);
@@ -44,9 +47,9 @@ function Chat({setActiveUser}) {
 
     const handleMessage=()=>{
         let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`
+        console.log();
         socket.emit('messageToServer',{message,room,name,time});
         setReceivedData((prev)=>[...prev,{message,name,time}]);
-        //document.getElementById("outlined-basic").value = '';
         setMessage('')
     }
 
@@ -59,6 +62,7 @@ function Chat({setActiveUser}) {
         if(e.key == "Enter")
         {
             handleMessage();
+            
         }
     }
     const handleEmoji =()=>{
@@ -81,6 +85,19 @@ function Chat({setActiveUser}) {
         })
       },[])
 
+      useEffect(()=>{
+          console.log(logoutUser,'loggguserrrr');
+        if(logoutUser)
+        {
+            let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
+            console.log(logoutUser,'i am inside');
+            socket.emit('disconnected',{name,room,time});
+            window.location.href = "/"
+            
+        }  
+        
+      },[logoutUser])
+
     return (
         <div className='' style={{height:'94%',overflowY:'hidden',zIndex:'2'}}>
             
@@ -88,7 +105,7 @@ function Chat({setActiveUser}) {
             style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px',flexWrap:'wrap',border:'1px solid black'}}>
                 {res.name}:{res.message}</div>))} */}
                
-                    <div className='' style={{maxHeight:'80%',overflowY:'scroll'}}>
+                    <div className='' style={{height:'80%',overflowY:'scroll'}}>
             {receivedData.map((res,index)=>(<span key={index}  style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px'}} ><MessageBox  data={{...res,index}}/>  </span>))}
             </div>
             {displayEmoji ? 
@@ -98,7 +115,7 @@ function Chat({setActiveUser}) {
                 //     <span>No emoji Chosen</span>
                 // )}
                 (<Picker onEmojiClick={onEmojiClick} disableSearchBar="true" style={{zIndex:'100'}} pickerStyle={{height:'250px',width:'250px'}} />):(<span></span>)}
-            <div className='' style={{display:'flex',maxHeight:'14%',alignItems:'center',justifyContent:'center',margin:'20px 0px'}}>
+            <div className='' style={{display:'flex',height:'14%',alignItems:'center',justifyContent:'center',margin:'20px 0px'}}>
                 
                   
                 {/* <TextField id="outlined-basic" color="primary" onKeyDown={handleSendOnEnter} onChange={handleText} label="enter your message" variant="outlined" /> */}

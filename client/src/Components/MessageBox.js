@@ -17,17 +17,20 @@ function MessageBox(props) {
         <>
         {console.log(props.data)}
         {name == 'Admin' ? 
+        
         <Paper elevation={2} style={{maxWidth:'75%',borderRadius:'10px',padding:'5px 5px',minWidth:'7%',backgroundColor:'azure'}}>
         <div style={{wordBreak:'break-word',fontSize:'1em',padding:'0px 5px'}}>{message}</div>
-        {/* <div className={classes.smallText} style={{display:'flex',justifyContent:'flex-end'}}>{new Date().getHours()%12}:{new Date().getMinutes()} {new Date().getHours() >= 12 ? 'PM' : 'AM'}</div> */}
+        {/* <div className={classes.smallText} style={{display:'flex',justifyContent:'center'}}>{time}</div>   */}
         </Paper>
+        
         :
-        <Paper key={index} elevation={2} style={{maxWidth:'25%',borderRadius:'10px',padding:'5px 5px',minWidth:'7%',backgroundColor:'bisque'}}>
+        <Paper key={index} elevation={2} style={{maxWidth:'40%',borderRadius:'10px',padding:'5px 5px',minWidth:'15%',backgroundColor:'bisque'}}>
             <div className={classes.smallText}>{name}</div>
             <div style={{wordBreak:'break-word',fontSize:'1em',padding:'0px 5px'}}>{message}</div>
             <div className={classes.smallText} style={{display:'flex',justifyContent:'flex-end'}}>{time}</div>
         </Paper>    
-        }   
+        }
+         
         {/* <Paper elevation={2} style={{maxWidth:'25%',borderRadius:'10px',padding:'5px 5px',minWidth:'7%'}}>
             <div className={classes.smallText}>{name}</div>
             <div style={{wordBreak:'break-all',fontSize:'1em',padding:'0px 5px'}}>{message}</div>
