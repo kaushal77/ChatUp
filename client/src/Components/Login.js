@@ -5,6 +5,10 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 // import Alert from '@material-ui/lab/Alert';
+import io from 'socket.io-client';
+
+const ENDPOINT = 'http://localhost:5000';
+const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,18 +37,6 @@ export default function Home() {
 
   const classes = useStyles();
 
-  const handleLogin = () => {
-    if(name !== "" && room !== "" && password !== "")
-    {
-      sessionStorage.setItem("name", name);
-      window.location.href = "/chat";
-    }
-    else {
-      alert('All fields must be filled');
-    }
-    
-  };
-
   const handleUsername = (e) => {
     console.log(e);
     var x = e.target.value;
@@ -63,10 +55,28 @@ export default function Home() {
     setPassword(x);
   };
 
+  const handleLogin = () => {
+    if(name !== "" && room !== "" && password !== "")
+    {
+      // const data = {Name:name,Room:room,Password:password};
+      // socket.emit('userData',data,(err)=>{console.log(err)});
+      sessionStorage.setItem("name", name);
+      sessionStorage.setItem("room", room);
+      sessionStorage.setItem("password", password);
+      window.location.href = "/chat";
+    }
+    else {
+      alert('All fields must be filled');
+    }
+    
+  };
+
   const handleSendOnEnter = (e) => {
     if (e.key === "Enter") {
       if(name !== "" && room !== "" && password !== "")
       {
+        const data = {Name:name,Room:room,Password:password};
+      // socket.emit('userData',data,(err)=>{console.log(err)});
         handleLogin();
       }
       else {
@@ -74,6 +84,10 @@ export default function Home() {
       }
     }
   };
+
+  useEffect(()=>{
+    sessionStorage.clear();
+  },[]);
 
   return (
     <div className={classes.root}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,13 +11,13 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Chat from './Chat';
-
 
 const drawerWidth = 240;
 
@@ -60,36 +60,38 @@ const useStyles = makeStyles((theme) => ({
   // }
 }));
 
-function ResponsiveDrawer(props) {
+function SideDrawer(props) {
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [logoutUser, setLogoutUser] = useState(false);
+  const [activeUser, setActiveUser] = useState([]);
+  
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleLogout =()=>{
+    setLogoutUser(true);
+  };
+  
   const drawer = (
     <div>
       {/* #3f51b5 */}
       <div className={classes.toolbar} style={{backgroundColor: 'cadetblue',boxShadow:'0px 0px 3px 0px rgba(0, 0, 0, 0.87)',
-      fontSize:'x-large',fontFamily:'cursive',textAlign:'center'}} >ChatUp</div>
+      fontSize:'x-large',fontFamily:'cursive',display:'flex',justifyContent:'center',alignItems:'center'}} >
+        ChatUp</div>
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+        
+        {console.log(activeUser,'helllllllllloo')}
+        {activeUser.map((res, index) => (
+          // console.log(res,'all user')
+          // res = {res.length == 0 ? sessionStorage.getItem('name') : res};
+          <ListItem button key={index}>
+            <ListItemIcon><FiberManualRecordIcon style={{color:'limegreen',fontSize:'1em'}} /></ListItemIcon>
+            <ListItemText primary={res} style={{marginLeft:'-30px'}} />
           </ListItem>
         ))}
       </List>
@@ -102,7 +104,7 @@ function ResponsiveDrawer(props) {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
+        <Toolbar style={{display:'flex',justifyContent:'space-between'}}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -112,9 +114,12 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            ChatUp
+          <Typography variant="h6" noWrap style={{color:'black'}} >
+            {sessionStorage.getItem('room')}
           </Typography>
+          <IconButton onClick={handleLogout}>
+            <ExitToAppIcon style={{color:'black'}} />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
@@ -150,13 +155,13 @@ function ResponsiveDrawer(props) {
       </nav>
       <main className={classes.content} style={{backgroundImage:"url(/bg_chatup.jpg)",height:'100vh'}}  >
         <div className={classes.toolbar}  />
-        <Chat />
+        <Chat setActiveUser={setActiveUser} logoutUser={logoutUser} />
       </main>
     </div>
   );
 }
 
-ResponsiveDrawer.propTypes = {
+SideDrawer.propTypes = {
   /**
    * Injected by the documentation to work in an iframe.
    * You won't need it on your project.
@@ -164,4 +169,4 @@ ResponsiveDrawer.propTypes = {
   window: PropTypes.func,
 };
 
-export default ResponsiveDrawer;
+export default SideDrawer;
