@@ -89,9 +89,9 @@ function SideDrawer(props) {
         {activeUser.map((res, index) => (
           // console.log(res,'all user')
           // res = {res.length == 0 ? sessionStorage.getItem('name') : res};
-          <ListItem button key={index}>
+          <ListItem button key={index+1}>
             <ListItemIcon><FiberManualRecordIcon style={{color:'limegreen',fontSize:'1em'}} /></ListItemIcon>
-            <ListItemText primary={res} style={{marginLeft:'-30px'}} />
+            <ListItemText primary={res.name} style={{marginLeft:'-30px'}} />
           </ListItem>
         ))}
       </List>
