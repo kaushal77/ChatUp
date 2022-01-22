@@ -13,9 +13,10 @@ const ENDPOINT = 'http://localhost:5000';
 const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
 
 function Chat({setActiveUser,logoutUser}) {
+
     const [message,setMessage] = useState('');
-    const [room,setRoom] = useState('dum1');
-    const [name,setName] = useState('');
+    const [room,setRoom] = useState(sessionStorage.getItem('room'));
+    const [name,setName] = useState(sessionStorage.getItem('name'));
     const [receivedData,setReceivedData] = useState([]);
     const [wHeight,setWHeight] = useState(null);
     const [chosenEmoji, setChosenEmoji] = useState(null);
@@ -25,22 +26,28 @@ function Chat({setActiveUser,logoutUser}) {
         console.log(socket);
         const username = sessionStorage.getItem('name');
         const userroom = sessionStorage.getItem('room');
+        const password = sessionStorage.getItem('password');
         if(sessionStorage.getItem('name') != undefined)
         {   
-            setName(username);
+            // setName(username);
             // setRoom(userroom);
             setActiveUser([username]);
             console.log("hiiiii",username,userroom);
         }
         
         let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
-        socket.emit('join',{name:username,room,time},(err)=>{
-            console.log(err);
+        socket.emit('join',{name:username,room,time,password},(data)=>{
+            console.log(data,data.status,'line 40');
+            if(!data.status)
+            {   
+                alert(data.error);
+                window.location.href = '/';
+            }
         })
-        socket.on('messageToClient',({message,name,time})=>{
+        socket.on('messageToClient',({message,name,room,time})=>{
             console.log(message,name);
             
-            setReceivedData((prev)=>[...prev,{message,name,time}])
+            setReceivedData((prev)=>[...prev,{message,name,room,time}])
         })
         
     },[])
@@ -49,7 +56,7 @@ function Chat({setActiveUser,logoutUser}) {
         let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`
         console.log();
         socket.emit('messageToServer',{message,room,name,time});
-        setReceivedData((prev)=>[...prev,{message,name,time}]);
+        setReceivedData((prev)=>[...prev,{message,room,name,time}]);
         setMessage('')
     }
 
@@ -81,7 +88,11 @@ function Chat({setActiveUser,logoutUser}) {
     useEffect(()=>{
         socket.on('activeUserData',(data)=>{
           console.log(data,'userrrrrr');
-          setActiveUser([...data]);
+          if(data)
+          {
+            setActiveUser([...data]);
+          }
+          
         })
       },[])
 
@@ -99,8 +110,8 @@ function Chat({setActiveUser,logoutUser}) {
       },[logoutUser])
 
     return (
-        <div className='' style={{height:'94%',overflowY:'hidden',zIndex:'2'}}>
-            
+        <div className='' style={{height:'94%',overflowY:'hidden',zIndex:2}}>
+            {console.log(receivedData)}
             {/* {receivedData.map((res,index)=>(<div key={index} 
             style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px',flexWrap:'wrap',border:'1px solid black'}}>
                 {res.name}:{res.message}</div>))} */}
@@ -114,13 +125,13 @@ function Chat({setActiveUser,logoutUser}) {
                 // ) : (
                 //     <span>No emoji Chosen</span>
                 // )}
-                (<Picker onEmojiClick={onEmojiClick} disableSearchBar="true" style={{zIndex:'100'}} pickerStyle={{height:'250px',width:'250px'}} />):(<span></span>)}
+                (<Picker onEmojiClick={onEmojiClick} disableSearchBar="true" style={{zIndex:1000}} pickerStyle={{height:'250px',width:'250px',bottom:'350px'}} />):(<span></span>)}
             <div className='' style={{display:'flex',height:'14%',alignItems:'center',justifyContent:'center',margin:'20px 0px'}}>
                 
                   
                 {/* <TextField id="outlined-basic" color="primary" onKeyDown={handleSendOnEnter} onChange={handleText} label="enter your message" variant="outlined" /> */}
                 <IconButton onClick={handleEmoji}><InsertEmoticonIcon fontSize='large' style={{color:'black'}} /></IconButton>
-                <input id="outlined-basic" autoComplete="off" onKeyDown={handleSendOnEnter} onChange={handleText} value={message} placeholder="Enter your message" style={{width:'70%',wordWrap:'break-word',padding:'1% 2%',borderRadius:'20px',margin:"0px 10px"}} />
+                <input id="outlined-basic" autoComplete="off" onKeyDown={handleSendOnEnter} onChange={handleText} value={message} placeholder="Enter your message" style={{width:'70%',wordWrap:'break-word',padding:'1% 2%',borderRadius:'8px',margin:"0px 10px"}} />
                 <IconButton onClick={handleMessage} ><SendIcon fontSize="large" style={{margin:'0px 5px',color:'black'}}/></IconButton>
                 <IconButton><AttachFileIcon fontSize="large" style={{color:'black'}} /></IconButton>
                 
