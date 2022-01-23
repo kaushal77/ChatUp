@@ -7,7 +7,7 @@ const http = require('http');
 const server = http.createServer(app);
 const socketio = require('socket.io');
 const io = socketio(server);
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 var activeusers = [];
 var users = [];
 var roomDetails = {};
@@ -124,7 +124,7 @@ if (process.env.NODE_ENV === "production") {
       res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
     });
   }
-  
+
 app.use(router);
 
 server.listen(PORT,()=>{
