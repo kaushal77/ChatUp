@@ -10,7 +10,8 @@ import { IconButton } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import Picker from 'emoji-picker-react';
 
-const ENDPOINT = 'http://localhost:5000';
+// const ENDPOINT = 'http://localhost:5000';
+const ENDPOINT = 'https://chatup-dev.herokuapp.com/';
 const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
 
 const useStyles = makeStyles((theme) => ({
