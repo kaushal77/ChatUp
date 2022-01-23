@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Chat from './Chat';
+import title_logo from '../logo_5.JPG';
 
 const drawerWidth = 240;
 
@@ -81,7 +82,9 @@ function SideDrawer(props) {
       {/* #3f51b5 */}
       <div className={classes.toolbar} style={{backgroundColor: 'cadetblue',boxShadow:'0px 0px 3px 0px rgba(0, 0, 0, 0.87)',
       fontSize:'x-large',fontFamily:'cursive',display:'flex',justifyContent:'center',alignItems:'center'}} >
-        ChatUp</div>
+        {/* <img src={title_logo} alt="" ></img> */}
+        ChatUp
+        </div>
       <Divider />
       <List>
         

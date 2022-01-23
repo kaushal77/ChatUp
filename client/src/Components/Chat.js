@@ -7,10 +7,27 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import './Chat.css';
 import { IconButton } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core/styles";
 import Picker from 'emoji-picker-react';
 
 const ENDPOINT = 'http://localhost:5000';
 const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& .MuiOutlinedInput-root': {
+          '& fieldset': {
+            borderColor: 'lightgrey',
+          },
+          '&:hover fieldset': {
+            borderColor: 'black',
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: 'black',
+          },
+        },
+      },
+  }));
 
 function Chat({setActiveUser,logoutUser}) {
 
@@ -21,6 +38,7 @@ function Chat({setActiveUser,logoutUser}) {
     const [wHeight,setWHeight] = useState(null);
     const [chosenEmoji, setChosenEmoji] = useState(null);
     const [displayEmoji, setDisplayEmoji] = useState(false);
+    const classes = useStyles();
 
     useEffect(()=>{ 
         console.log(socket);
@@ -104,7 +122,7 @@ function Chat({setActiveUser,logoutUser}) {
             console.log(logoutUser,'i am inside');
             socket.emit('disconnected',{name,room,time});
             window.location.href = "/"
-            
+            sessionStorage.clear();
         }  
         
       },[logoutUser])
@@ -130,8 +148,8 @@ function Chat({setActiveUser,logoutUser}) {
                 
                   
                 {/* <TextField id="outlined-basic" color="primary" onKeyDown={handleSendOnEnter} onChange={handleText} label="enter your message" variant="outlined" /> */}
-                <IconButton onClick={handleEmoji}><InsertEmoticonIcon fontSize='large' style={{color:'black'}} /></IconButton>
-                <input id="outlined-basic" autoComplete="off" onKeyDown={handleSendOnEnter} onChange={handleText} value={message} placeholder="Enter your message" style={{width:'70%',wordWrap:'break-word',padding:'1% 2%',borderRadius:'8px',margin:"0px 10px"}} />
+                {/* <IconButton onClick={handleEmoji}><InsertEmoticonIcon fontSize='large' style={{color:'black'}} /></IconButton> */}
+                <TextField className={classes.MuiInputBaseInput} id="outlined-basic" autoComplete="off" onKeyDown={handleSendOnEnter} onChange={handleText} value={message} wordWrap variant="outlined" placeholder="Enter your message" style={{width:'70%',wordWrap:'break-word',borderRadius:'8px',margin:"0px 10px",background:'ghostwhite'}} />
                 <IconButton onClick={handleMessage} ><SendIcon fontSize="large" style={{margin:'0px 5px',color:'black'}}/></IconButton>
                 <IconButton><AttachFileIcon fontSize="large" style={{color:'black'}} /></IconButton>
                 
