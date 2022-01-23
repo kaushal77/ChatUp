@@ -87,8 +87,6 @@ function SideDrawer(props) {
         </div>
       <Divider />
       <List>
-        
-        {console.log(activeUser,'helllllllllloo')}
         {activeUser.map((res, index) => (
           // console.log(res,'all user')
           // res = {res.length == 0 ? sessionStorage.getItem('name') : res};

@@ -36,19 +36,19 @@ export default function Home() {
   const classes = useStyles();
 
   const handleUsername = (e) => {
-    console.log(e);
+    //console.log(e);
     var x = e.target.value;
     setName(x);
   };
 
   const handleRoom = (e) => {
-    console.log(e);
+    //console.log(e);
     var x = e.target.value;
     setRoom(x);
   };
 
   const handlePassword = (e) => {
-    console.log(e);
+    //console.log(e);
     var x = e.target.value;
     setPassword(x);
   };

@@ -41,7 +41,7 @@ function Chat({setActiveUser,logoutUser}) {
     const classes = useStyles();
 
     useEffect(()=>{ 
-        console.log(socket);
+        //console.log(socket);
         const username = sessionStorage.getItem('name');
         const userroom = sessionStorage.getItem('room');
         const password = sessionStorage.getItem('password');
@@ -50,12 +50,12 @@ function Chat({setActiveUser,logoutUser}) {
             // setName(username);
             // setRoom(userroom);
             setActiveUser([username]);
-            console.log("hiiiii",username,userroom);
+            //console.log("hiiiii",username,userroom);
         }
         
         let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
         socket.emit('join',{name:username,room,time,password},(data)=>{
-            console.log(data,data.status,'line 40');
+            //console.log(data,data.status,'line 40');
             if(!data.status)
             {   
                 alert(data.error);
@@ -63,7 +63,7 @@ function Chat({setActiveUser,logoutUser}) {
             }
         })
         socket.on('messageToClient',({message,name,room,time})=>{
-            console.log(message,name);
+            //console.log(message,name);
             
             setReceivedData((prev)=>[...prev,{message,name,room,time}])
         })
@@ -72,7 +72,7 @@ function Chat({setActiveUser,logoutUser}) {
 
     const handleMessage=()=>{
         let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`
-        console.log();
+        //console.log();
         socket.emit('messageToServer',{message,room,name,time});
         setReceivedData((prev)=>[...prev,{message,room,name,time}]);
         setMessage('')
@@ -105,7 +105,7 @@ function Chat({setActiveUser,logoutUser}) {
 
     useEffect(()=>{
         socket.on('activeUserData',(data)=>{
-          console.log(data,'userrrrrr');
+          //console.log(data,'userrrrrr');
           if(data)
           {
             setActiveUser([...data]);
@@ -115,7 +115,7 @@ function Chat({setActiveUser,logoutUser}) {
       },[])
 
       useEffect(()=>{
-          console.log(logoutUser,'loggguserrrr');
+          //console.log(logoutUser,'loggguserrrr');
         if(logoutUser)
         {
             let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
@@ -129,7 +129,7 @@ function Chat({setActiveUser,logoutUser}) {
 
     return (
         <div className='' style={{height:'94%',overflowY:'hidden',zIndex:2}}>
-            {console.log(receivedData)}
+            
             {/* {receivedData.map((res,index)=>(<div key={index} 
             style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px',flexWrap:'wrap',border:'1px solid black'}}>
                 {res.name}:{res.message}</div>))} */}
