@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const router = require('./router');
-app.use(router);
+
 
 const http = require('http');
 const server = http.createServer(app);
@@ -114,6 +114,18 @@ io.on('connect',(socket)=>{
 
 
 })
+
+if (process.env.NODE_ENV === "production") {
+    //Set static folder
+    app.use(express.static("client/build"));
+  
+    app.get("*", (req, res) => {
+      //first require path then...
+      res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    });
+  }
+  
+app.use(router);
 
 server.listen(PORT,()=>{
     console.log(`server started on port : ${PORT}`);
