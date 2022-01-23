@@ -15,7 +15,7 @@ function MessageBox(props) {
 
     return (
         <>
-        {console.log(props.data)}
+       
         {name == 'Admin' ? 
         
         <Paper elevation={2} style={{maxWidth:'75%',borderRadius:'10px',padding:'5px 5px',minWidth:'7%',backgroundColor:'azure'}}>

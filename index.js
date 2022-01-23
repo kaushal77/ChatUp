@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
 const router = require('./router');
-app.use(router);
+const path = require("path");
 
 const http = require('http');
 const server = http.createServer(app);
 const socketio = require('socket.io');
 const io = socketio(server);
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 var activeusers = [];
 var users = [];
 var roomDetails = {};
@@ -15,11 +15,11 @@ var roomDetails = {};
 const addUser = ({id, name, room}) => {
     name = name.trim().toLowerCase();
     room = room.trim().toLowerCase();
-    console.log(users,'use');
+    //console.log(users,'use');
     const existingUser = users.findIndex((user) => user.room === room && user.name === name);
-    console.log(existingUser,'lllllll');
+    //console.log(existingUser,'lllllll');
     if(existingUser >= 0) {
-        console.log(existingUser,'mmmmmmmmm');
+        //console.log(existingUser,'mmmmmmmmm');
         return {error: "username is taken"};
     }
     const user = {id,name,room};
@@ -29,13 +29,13 @@ const addUser = ({id, name, room}) => {
 }
 
 const removeUser = (id) => {
-    console.log(id,'id');
+    //console.log(id,'id');
     const index = users.findIndex((user) => user.id == id);
-    console.log(users,'line 35');
-    console.log(index,'aaaaaaaa');
+    //console.log(users,'line 35');
+    //console.log(index,'aaaaaaaa');
     if(index >= 0) {
-        console.log(index,'bbbbbbbbbb');
-        console.log(users.splice(index,1),'splicccc');
+        //console.log(index,'bbbbbbbbbb');
+        //console.log(users.splice(index,1),'splicccc');
         users.splice(index,1);
     }
 }
@@ -44,13 +44,13 @@ const getUsersInRoom = (room) => users.filter((user) => user.room === room);
 
 io.on('connect',(socket)=>{
     socket.on('join',({name,room,time,password},callback)=>{
-        console.log('join room',activeusers);
-        console.log(getUsersInRoom(room),'line48');
+        //console.log('join room',activeusers);
+        //console.log(getUsersInRoom(room),'line48');
         if(getUsersInRoom(room).length == 0)
         {
             roomDetails[room] = password;
         }
-        console.log(roomDetails);
+        //console.log(roomDetails);
         const isAuth = (roomDetails[room] == password);
         if(!isAuth)
         {
@@ -69,15 +69,15 @@ io.on('connect',(socket)=>{
 
         socket.emit('messageToClient',{message:`welcome to the room, ${name}`,name:'Admin',room,time});
         socket.broadcast.to(room).emit('messageToClient',{message:`${name} joined the room `,name:'Admin',room,time});
-        console.log(activeusers,'activeusers');
+        //console.log(activeusers,'activeusers');
         activeusers = getUsersInRoom(room);
-        console.log(activeusers,'usersss');
+        //console.log(activeusers,'usersss');
         io.to(room).emit('activeUserData',activeusers);
         
     })
 
     socket.on('messageToServer',({message,room,name,time})=>{
-        console.log(message,room);
+        //console.log(message,room);
         // let data = {message,room,name,time};
         
         socket.broadcast.to(room).emit('messageToClient',{message,name,room,time});
@@ -91,10 +91,10 @@ io.on('connect',(socket)=>{
             delete roomDetails[room];
         }
         removeUser(socket.id);
-        console.log(activeusers,'ggggggggggggggg');
-        console.log(users,'ffffffffffff');
+        //console.log(activeusers,'ggggggggggggggg');
+        //console.log(users,'ffffffffffff');
         if(users.length > 0){
-            console.log('jjjjjjjj');
+            //console.log('jjjjjjjj');
             activeusers = [...users];
             io.to(room).emit('activeUserData',activeusers);
             socket.broadcast.to(room).emit('messageToClient',{message:`${name} left the room `,name:'Admin',room,time});
@@ -114,6 +114,18 @@ io.on('connect',(socket)=>{
 
 
 })
+
+if (process.env.NODE_ENV === "production") {
+    //Set static folder
+    app.use(express.static("client/build"));
+  
+    app.get("*", (req, res) => {
+      //first require path then...
+      res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    });
+  }
+
+app.use(router);
 
 server.listen(PORT,()=>{
     console.log(`server started on port : ${PORT}`);

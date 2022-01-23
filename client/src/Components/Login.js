@@ -4,22 +4,19 @@ import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-// import Alert from '@material-ui/lab/Alert';
-import io from 'socket.io-client';
+import title_logo from '../logo_4.JPG';
 
-const ENDPOINT = 'http://localhost:5000';
-const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
 
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "absolute",
     top: "50%",
-    left: "50%",
+    left: "25%",
     transform: "translate(-50%,-50%)",
     "& > *": {
       margin: theme.spacing(5),
-      width: theme.spacing(45),
-      height: theme.spacing(45),
+      width: theme.spacing(35),
+      height: theme.spacing(35),
     },
   },
 
@@ -27,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-evenly",
+    alignItems:'center'
   },
 }));
 
@@ -38,19 +36,19 @@ export default function Home() {
   const classes = useStyles();
 
   const handleUsername = (e) => {
-    console.log(e);
+    //console.log(e);
     var x = e.target.value;
     setName(x);
   };
 
   const handleRoom = (e) => {
-    console.log(e);
+    //console.log(e);
     var x = e.target.value;
     setRoom(x);
   };
 
   const handlePassword = (e) => {
-    console.log(e);
+    //console.log(e);
     var x = e.target.value;
     setPassword(x);
   };
@@ -86,17 +84,21 @@ export default function Home() {
   };
 
   useEffect(()=>{
-    sessionStorage.clear();
+    // sessionStorage.clear();
   },[]);
 
   return (
-    <div className={classes.root}>
+    
+    <div  style={{backgroundImage:`url(${title_logo})`,height:'100vh',backgroundRepeat:'no-repeat',backgroundSize:'cover',backgroundPosition:'center'}} >
       {/* <Alert variant="filled" severity="error" >
         This is an error alert — check it out!
       </Alert> */}
-      <Paper elevation={3}>
-        <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)"}}>
-          <div style={{margin:"10% 0%"}}>
+      <Paper elevation={3} className={classes.root} >
+        <center>
+        <div className={classes.loginCard} >
+          {/* <div><img src={title_logo} alt="logo"></img></div> */}
+          <strong>Welcome</strong>
+          <div >
             <TextField
               required
               id="outlined-basic"
@@ -135,7 +137,9 @@ export default function Home() {
             </Button>
           </div>
         </div>
+        </center>
       </Paper>
     </div>
+   
   );
 }
