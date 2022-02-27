@@ -6,6 +6,7 @@ const path = require("path");
 const http = require('http');
 const server = http.createServer(app);
 const socketio = require('socket.io');
+const { disconnect } = require('process');
 const io = socketio(server);
 const PORT = process.env.PORT || 5000;
 var activeusers = [];
@@ -85,7 +86,23 @@ io.on('connect',(socket)=>{
         
     });
 
-    socket.on('disconnected',({name,room,time})=>{
+    socket.on('disconnected',()=>{
+        let room='';
+        let name = '';
+        users.filter((user)=>{
+            if(user.id == socket.id)
+            {
+                name =  user.name;
+            }
+        });
+        users.filter((user)=>{
+            if(user.id == socket.id)
+            {
+                room = user.room;
+            }
+        });
+        let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
+        // console.log(name,room,time,'loggoutttt');
         if(users.length == 1)
         {
             delete roomDetails[room];
@@ -100,6 +117,40 @@ io.on('connect',(socket)=>{
             socket.broadcast.to(room).emit('messageToClient',{message:`${name} left the room `,name:'Admin',room,time});
         }
        
+    });
+
+    socket.on('disconnect',()=>{
+        // console.log('testinggggg');
+        let room='';
+        let name = '';
+        users.filter((user)=>{
+            if(user.id == socket.id)
+            {
+                name =  user.name;
+            }
+        });
+        users.filter((user)=>{
+            if(user.id == socket.id)
+            {
+                room = user.room;
+            }
+        });
+        let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
+        // console.log(name,room,time,'logg');
+        if(users.length == 1)
+        {
+            delete roomDetails[room];
+        }
+        removeUser(socket.id);
+        // console.log(activeusers,'ggggggggggggggg');
+        // console.log(users,'ffffffffffff');
+        if(users.length > 0){
+            // console.log('jjjjjjjj');
+            activeusers = [...users];
+            io.to(room).emit('activeUserData',activeusers);
+            socket.broadcast.to(room).emit('messageToClient',{message:`${name} left the room `,name:'Admin',room,time});
+        }
+
     });
 
     // socket.on('userData',(data,callback)=>{

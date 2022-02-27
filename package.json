@@ -7,10 +7,12 @@
     "build": "cd client && npm run build",
     "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "client" : "cd client && npm start",
-    "dev": "npm run client",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index.js",
+    "frontend": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run frontend\""
   },
   "author": "Kaushal Chitlangia",
   "license": "ISC",

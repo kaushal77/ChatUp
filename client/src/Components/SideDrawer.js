@@ -18,7 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Chat from './Chat';
-import title_logo from '../logo_5.JPG';
+import title_logo from '../logo_7.png';
 
 const drawerWidth = 240;
 
@@ -82,8 +82,8 @@ function SideDrawer(props) {
       {/* #3f51b5 */}
       <div className={classes.toolbar} style={{backgroundColor: 'cadetblue',boxShadow:'0px 0px 3px 0px rgba(0, 0, 0, 0.87)',
       fontSize:'x-large',fontFamily:'cursive',display:'flex',justifyContent:'center',alignItems:'center'}} >
-        {/* <img src={title_logo} alt="" ></img> */}
-        ChatUp
+        <img src={title_logo} alt="" style={{width: '-webkit-fill-available' }} ></img>
+        
         </div>
       <Divider />
       <List>
@@ -115,8 +115,8 @@ function SideDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap style={{color:'black'}} >
-            {sessionStorage.getItem('room')}
+          <Typography variant="h6" noWrap style={{color:'black',fontSize:'16px',fontFamily:'emoji'}}>
+            Room : {sessionStorage.getItem('room')}
           </Typography>
           <IconButton onClick={handleLogout}>
             <ExitToAppIcon style={{color:'black'}} />
