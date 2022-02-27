@@ -18,16 +18,23 @@ const useStyles = makeStyles((theme) => ({
     root: {
         '& .MuiOutlinedInput-root': {
           '& fieldset': {
-            borderColor: 'lightgrey',
+            borderColor: 'unset',
+            borderSize: 'thin',
           },
           '&:hover fieldset': {
-            borderColor: 'black',
+            borderColor: 'unset',
+            borderSize: 'thin',
           },
           '&.Mui-focused fieldset': {
-            borderColor: 'black',
+            borderColor: 'unset',
+            borderSize: 'thin',
           },
         },
       },
+    notchedOutline:{
+        borderColor:'unset !important',
+        borderWidth:'thin !important'
+      }
   }));
 
 function Chat({setActiveUser,logoutUser}) {
@@ -46,10 +53,9 @@ function Chat({setActiveUser,logoutUser}) {
         const username = sessionStorage.getItem('name');
         const userroom = sessionStorage.getItem('room');
         const password = sessionStorage.getItem('password');
+        
         if(sessionStorage.getItem('name') != undefined)
         {   
-            // setName(username);
-            // setRoom(userroom);
             setActiveUser([username]);
             //console.log("hiiiii",username,userroom);
         }
@@ -72,7 +78,7 @@ function Chat({setActiveUser,logoutUser}) {
     },[])
 
     const handleMessage=()=>{
-        let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`
+        let time = `${new Date().getHours()%12}:${new Date().getMinutes() < 10 ? '0'+ new Date().getMinutes() : new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`
         //console.log();
         socket.emit('messageToServer',{message,room,name,time});
         setReceivedData((prev)=>[...prev,{message,room,name,time}]);
@@ -113,6 +119,7 @@ function Chat({setActiveUser,logoutUser}) {
           }
           
         })
+        
       },[])
 
       useEffect(()=>{
@@ -120,13 +127,18 @@ function Chat({setActiveUser,logoutUser}) {
         if(logoutUser)
         {
             let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
-            console.log(logoutUser,'i am inside');
-            socket.emit('disconnected',{name,room,time});
+            socket.emit('disconnected');
             window.location.href = "/"
             sessionStorage.clear();
         }  
         
       },[logoutUser])
+
+      useEffect(()=>{
+        var objDiv = document.getElementById("message-area");
+        objDiv.scrollTop = objDiv.scrollHeight;
+        // window.scrollTo(0,document.body.scrollHeight);
+      },[receivedData])
 
     return (
         <div className='' style={{height:'94%',overflowY:'hidden',zIndex:2}}>
@@ -135,7 +147,7 @@ function Chat({setActiveUser,logoutUser}) {
             style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px',flexWrap:'wrap',border:'1px solid black'}}>
                 {res.name}:{res.message}</div>))} */}
                
-                    <div className='' style={{height:'80%',overflowY:'scroll'}}>
+                    <div id="message-area" className='' style={{height:'80%',overflowY:'scroll'}}>
             {receivedData.map((res,index)=>(<span key={index}  style={{display:'flex',justifyContent:res.name == 'Admin'? 'center':res.name == name ? 'flex-end' :'flex-start',margin:'20px',padding:'5px'}} ><MessageBox  data={{...res,index}}/>  </span>))}
             </div>
             {displayEmoji ? 
@@ -145,14 +157,19 @@ function Chat({setActiveUser,logoutUser}) {
                 //     <span>No emoji Chosen</span>
                 // )}
                 (<Picker onEmojiClick={onEmojiClick} disableSearchBar="true" style={{zIndex:1000}} pickerStyle={{height:'250px',width:'250px',bottom:'350px'}} />):(<span></span>)}
-            <div className='' style={{display:'flex',height:'14%',alignItems:'center',justifyContent:'center',margin:'20px 0px'}}>
+            <div className='' style={{display:'flex',alignItems:'center',justifyContent:'center',margin:'20px 0px'}}>
                 
                   
                 {/* <TextField id="outlined-basic" color="primary" onKeyDown={handleSendOnEnter} onChange={handleText} label="enter your message" variant="outlined" /> */}
                 {/* <IconButton onClick={handleEmoji}><InsertEmoticonIcon fontSize='large' style={{color:'black'}} /></IconButton> */}
-                <TextField className={classes.MuiInputBaseInput} id="outlined-basic" autoComplete="off" onKeyDown={handleSendOnEnter} onChange={handleText} value={message} wordWrap variant="outlined" placeholder="Enter your message" style={{width:'70%',wordWrap:'break-word',borderRadius:'8px',margin:"0px 10px",background:'ghostwhite'}} />
+                <TextField className={classes.root} InputProps={{
+                classes: {
+                  notchedOutline: classes.notchedOutline
+                }
+              }} id="outlined-basic" autoComplete="off" onKeyDown={handleSendOnEnter}
+                onChange={handleText} value={message} variant="outlined" placeholder="Message" autoFocus style={{width:'80%',wordWrap:'break-word',borderRadius:'8px',background:'ghostwhite'}} />
                 <IconButton onClick={handleMessage} ><SendIcon fontSize="large" style={{margin:'0px 5px',color:'black'}}/></IconButton>
-                <IconButton><AttachFileIcon fontSize="large" style={{color:'black'}} /></IconButton>
+                {/* <IconButton><AttachFileIcon fontSize="large" style={{color:'black'}} /></IconButton> */}
                 
             </div>
             
