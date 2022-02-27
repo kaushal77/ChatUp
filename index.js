@@ -102,7 +102,7 @@ io.on('connect',(socket)=>{
             }
         });
         let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
-        console.log(name,room,time,'loggoutttt');
+        // console.log(name,room,time,'loggoutttt');
         if(users.length == 1)
         {
             delete roomDetails[room];
@@ -120,7 +120,7 @@ io.on('connect',(socket)=>{
     });
 
     socket.on('disconnect',()=>{
-        console.log('testinggggg');
+        // console.log('testinggggg');
         let room='';
         let name = '';
         users.filter((user)=>{
@@ -136,16 +136,16 @@ io.on('connect',(socket)=>{
             }
         });
         let time = `${new Date().getHours()%12}:${new Date().getMinutes()} ${new Date().getHours() >= 12 ? 'PM' : 'AM'}`;
-        console.log(name,room,time,'logg');
+        // console.log(name,room,time,'logg');
         if(users.length == 1)
         {
             delete roomDetails[room];
         }
         removeUser(socket.id);
         // console.log(activeusers,'ggggggggggggggg');
-        console.log(users,'ffffffffffff');
+        // console.log(users,'ffffffffffff');
         if(users.length > 0){
-            console.log('jjjjjjjj');
+            // console.log('jjjjjjjj');
             activeusers = [...users];
             io.to(room).emit('activeUserData',activeusers);
             socket.broadcast.to(room).emit('messageToClient',{message:`${name} left the room `,name:'Admin',room,time});
