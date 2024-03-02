@@ -8,7 +8,7 @@ import './Chat.css';
 import { IconButton, InputAdornment } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 
-const ENDPOINT = 'http://localhost:5000';
+const ENDPOINT = '/';
 // const ENDPOINT = 'https://chatup-dev.herokuapp.com/';
 const socket = io(ENDPOINT,{ transports: ["websocket"], secure: true, reconnection: true, rejectUnauthorized: false });
 
