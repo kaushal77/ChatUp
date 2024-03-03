@@ -86,6 +86,12 @@ io.on('connect',(socket)=>{
         
     });
 
+    socket.on('fileUpload',({result,room,name,time})=>{
+        // console.log(result,room,name,time);
+        socket.broadcast.to(room).emit('messageToClient',{result,name,room,time})
+
+    })
+
     socket.on('disconnected',()=>{
         let room='';
         let name = '';
